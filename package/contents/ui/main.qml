@@ -122,7 +122,6 @@ Item {
             }
             else if (sourceName == averageClock) {
                 averageCpuClock = parseInt(data.value)
-                allUsageProportionChanged()
             }
             else if (sourceName == downloadTotal) {
                 downloadKBs = parseFloat(data.value)
@@ -132,6 +131,7 @@ Item {
                 uploadKBs = parseFloat(data.value)
                 uploadProportion = fitUploadRate(data.value)
             }
+            allUsageProportionChanged()
         }
         interval: 1000 * plasmoid.configuration.updateInterval
     }
