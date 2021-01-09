@@ -55,8 +55,8 @@ Item {
     property color warningColor: Qt.tint(theme.textColor, '#60FF0000')
     property string textFontFamily: theme.defaultFont.family
 
-    property double widgetWidth: !verticalLayout ? (itemWidth*containerCount + itemMargin*(containerCount)*2) : itemWidth
-    property double widgetHeight: verticalLayout ? (itemWidth*containerCount + itemMargin*(containerCount)*2) : itemWidth
+    property double widgetWidth: !verticalLayout ? (itemWidth*containerCount + itemMargin) : itemWidth
+    property double widgetHeight: verticalLayout ? (itemWidth*containerCount + itemMargin) : itemWidth
 
     Layout.preferredWidth:  widgetWidth
     Layout.maximumWidth: widgetWidth
