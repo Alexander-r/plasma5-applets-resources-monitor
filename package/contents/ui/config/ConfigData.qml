@@ -5,9 +5,9 @@ import QtQuick.Layouts 1.1
 Item {
     
     property alias cfg_networkSensorDownload: networkSensorDownload.text
-    property alias cfg_downloadMaxKBs: downloadMaxKBs.value
+    property alias cfg_downloadMaxMbps: downloadMaxMbps.value
     property alias cfg_networkSensorUpload: networkSensorUpload.text
-    property alias cfg_uploadMaxKBs: uploadMaxKBs.value
+    property alias cfg_uploadMaxMbps: uploadMaxMbps.value
 
     GridLayout {
         Layout.fillWidth: true
@@ -19,7 +19,7 @@ Item {
         }
         TextField {
             id: networkSensorDownload
-            placeholderText: 'network/interfaces/enp4s0/receiver/data'
+            placeholderText: 'network/interfaces/eth0/receiver/data'
             Layout.preferredWidth: 500
             onTextChanged: cfg_networkSensorDownload = text
         }
@@ -29,13 +29,13 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SpinBox {
-            id: downloadMaxKBs
-            decimals: 0
-            stepSize: 10
-            minimumValue: 10
+            id: downloadMaxMbps
+            decimals: 1
+            stepSize: 0.5
+            minimumValue: 0.5
             maximumValue: 100000
-            value: cfg_downloadMaxKBs
-            suffix: i18nc('Abbreviation for KB/s', ' KB/s')
+            value: cfg_downloadMaxMbps
+            suffix: i18nc('Abbreviation for Mbit/s', ' Mbit/s')
         }
         
         Label {
@@ -44,7 +44,7 @@ Item {
         }
         TextField {
             id: networkSensorUpload
-            placeholderText: 'network/interfaces/enp4s0/transmitter/data'
+            placeholderText: 'network/interfaces/eth0/transmitter/data'
             Layout.preferredWidth: 500
             onTextChanged: cfg_networkSensorUpload = text
         }
@@ -54,13 +54,13 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SpinBox {
-            id: uploadMaxKBs
-            decimals: 0
-            stepSize: 10
-            minimumValue: 10
+            id: uploadMaxMbps
+            decimals: 1
+            stepSize: 0.5
+            minimumValue: 0.5
             maximumValue: 100000
-            value: cfg_uploadMaxKBs
-            suffix: i18nc('Abbreviation for KB/s', ' KB/s')
+            value: cfg_uploadMaxMbps
+            suffix: i18nc('Abbreviation for Mbit/s', ' Mbit/s')
         }        
         
     }

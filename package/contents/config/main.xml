@@ -40,16 +40,16 @@
 
     <group name="Data">
         <entry name="networkSensorDownload" type="String">
-            <default>network/interfaces/enp4s0/receiver/data</default>
+            <default>network/interfaces/eth0/receiver/data</default>
         </entry>
-        <entry name="downloadMaxKBs" type="Double">
-            <default>7168</default>
+        <entry name="downloadMaxMbps" type="Double">
+            <default>1000</default>
         </entry>
         <entry name="networkSensorUpload" type="String">
-            <default>network/interfaces/enp4s0/transmitter/data</default>
+            <default>network/interfaces/eth0/transmitter/data</default>
         </entry>
-        <entry name="uploadMaxKBs" type="Double">
-            <default>717</default>
+        <entry name="uploadMaxMbps" type="Double">
+            <default>1000</default>
         </entry>
     </group>
     

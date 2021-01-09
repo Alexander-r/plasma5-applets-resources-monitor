@@ -38,8 +38,8 @@ Item {
     property bool enableShadows: plasmoid.configuration.enableShadows
     property double fontScale: (plasmoid.configuration.fontScale / 100)
     property bool showMemoryInPercent: memoryInPercent
-    property int downloadMaxKBs: plasmoid.configuration.downloadMaxKBs
-    property int uploadMaxKBs: plasmoid.configuration.uploadMaxKBs
+    property int downloadMaxMbps: plasmoid.configuration.downloadMaxMbps
+    property int uploadMaxMbps: plasmoid.configuration.uploadMaxMbps
     property color networkUploadDiagramColor: plasmoid.configuration.networkUploadDiagramColor
     property color networkDownloadDiagramColor: plasmoid.configuration.networkDownloadDiagramColor
     
@@ -125,11 +125,11 @@ Item {
             }
             else if (sourceName == downloadTotal) {
                 downloadKBs = parseFloat(data.value)
-                downloadProportion = fitDownloadRate(data.value)
+                downloadProportion = fitDownloadRate(data.value / 1024 * 8)
             }
-             else if (sourceName == uploadTotal) {
+            else if (sourceName == uploadTotal) {
                 uploadKBs = parseFloat(data.value)
-                uploadProportion = fitUploadRate(data.value)
+                uploadProportion = fitUploadRate(data.value / 1024 * 8)
             }
             allUsageProportionChanged()
         }
@@ -155,17 +155,17 @@ Item {
     }
 
     function fitDownloadRate(rate) {
-        if (!downloadMaxKBs) {
+        if (!downloadMaxMbps) {
             return 0
         }
-        return (rate / downloadMaxKBs)
+        return (rate / downloadMaxMbps)
     }
 
     function fitUploadRate(rate) {
-        if (!uploadMaxKBs) {
+        if (!uploadMaxMbps) {
             return 0
         }
-        return (rate / uploadMaxKBs)
+        return (rate / uploadMaxMbps)
     }
 
     ListModel {
@@ -209,11 +209,12 @@ Item {
         return Math.round(clockNumber * floatingPointCount) / floatingPointCount + 'GHz'
     }
     
-    function getHumanReadableNetRate(rateKiBs){
-        if(rateKiBs <= 1024){
-            return rateKiBs + 'K'
+    function getHumanReadableNetRate(rateKiBs) {
+        var rateMbps = rateKiBs / 1024 * 8
+        if (rateMbps < 10) {
+            return Math.round(rateMbps * 10) / 10 + 'Mb/s'
         }
-        return Math.round(rateKiBs / 1024 * 100) / 100 + 'M'
+        return Math.round(rateMbps) + 'Mb/s'
     }
 
     function allUsageProportionChanged() {
@@ -242,16 +243,15 @@ Item {
             addGraphData(swapGraphModel, totalSwapProportion, graphGranularity)
         }
         if(showNetMonitor){
-            addGraphData(uploadGraphModel, totalUploadProportion * itemHeight, graphGranularity)
-            addGraphData(downloadGraphModel, totalDownloadProportion * itemHeight, graphGranularity)
+            addGraphData(downloadGraphModel, totalDownloadProportion, graphGranularity)
+            addGraphData(uploadGraphModel, totalUploadProportion, graphGranularity)
         }
 
-        netUploadKiBsText.text = getHumanReadableNetRate(dataSource.uploadKBs)
-        netDownloadKiBsText.text = getHumanReadableNetRate(dataSource.downloadKBs)
+        netUploadMbpsText.text = getHumanReadableNetRate(dataSource.uploadKBs)
+        netDownloadMbpsText.text = getHumanReadableNetRate(dataSource.downloadKBs)
     }
     
     function addGraphData(model, graphItemPercent, graphGranularity) {
-        
         // initial fill up
         while (model.count < graphGranularity) {
             model.append({
@@ -475,13 +475,13 @@ Item {
         visible: showNetMonitor
 
         HistoryGraph {
-            listViewModel: uploadGraphModel
-            barColor: networkUploadDiagramColor
+            listViewModel: downloadGraphModel
+            barColor: networkDownloadDiagramColor
         }
 
         HistoryGraph {
-            listViewModel: downloadGraphModel
-            barColor: networkDownloadDiagramColor
+            listViewModel: uploadGraphModel
+            barColor: networkUploadDiagramColor
         }
 
         Item {
@@ -500,7 +500,7 @@ Item {
             }
 
             PlasmaComponents.Label {
-                id: netUploadKiBsText
+                id: netUploadMbpsText
                 anchors.right: parent.right
                 verticalAlignment: Text.AlignTop
                 text: '...'
@@ -509,7 +509,7 @@ Item {
             }
 
             PlasmaComponents.Label {
-                id: netDownloadKiBsText
+                id: netDownloadMbpsText
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 font.pixelSize: fontPixelSize
@@ -545,16 +545,16 @@ Item {
 
             onEntered: {
                 netUploadInfoText.visible = true
-                netUploadKiBsText.visible = false
+                netUploadMbpsText.visible = false
                 netDownloadInfoText.visible = true
-                netDownloadKiBsText.visible = false
+                netDownloadMbpsText.visible = false
             }
 
             onExited: {
                 netUploadInfoText.visible = false
-                netUploadKiBsText.visible = true
+                netUploadMbpsText.visible = true
                 netDownloadInfoText.visible = false
-                netDownloadKiBsText.visible = true
+                netDownloadMbpsText.visible = true
             }
         }
     }
